@@ -10,7 +10,10 @@ function Dashboard() {
     setTodos(response.data)
   }
   useEffect(() => {
-    fetchTodos()
+    ;(async () => {
+      const response = await API.get("/todos")
+      setTodos(response.data)
+    })()
   }, [])
 
   const addTodo = async () => {
