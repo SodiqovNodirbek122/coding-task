@@ -33,6 +33,14 @@ function Dashboard() {
     fetchTodos()
   }
 
+  const completeTask = async (id) => {
+    await API.put(`/todos/${id}`, {
+      text: todos.find((todo) => todo._id === id).text,
+      completed: true,
+    })
+    fetchTodos()
+  }
+
   return (
     <div>
       <h1>Dashboard</h1>
@@ -51,7 +59,7 @@ function Dashboard() {
             key={todo._id}
           >
             {todo.text}
-            <button>Complete</button>
+            <button onClick={() => completeTask(todo._id)}>Complete</button>
             <button onClick={() => deleteTask(todo._id)}>Delete</button>
           </li>
         ))}
