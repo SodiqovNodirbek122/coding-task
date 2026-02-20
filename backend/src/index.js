@@ -1,19 +1,35 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import express from "express"
+import cors from "cors"
+import dotenv from "dotenv"
+import authRouter from "./routes/auth.js"
+import todosRouter from "./routes/todos.js"
+import aiRouter from "./routes/ai.js"
+import mongoose from "mongoose"
 
-dotenv.config();
+dotenv.config()
 
-const app = express();
-const PORT = process.env.PORT || 3001;
+const app = express()
+const PORT = process.env.PORT || 3001
 
-app.use(cors());
-app.use(express.json());
+app.use(cors())
+app.use(express.json())
 
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
-});
+app.use("/api/auth", authRouter)
+app.use("/api/todos", todosRouter)
+app.use("/api/ai", aiRouter)
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" })
+})
+
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log("Connected to MongoDB")
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`)
+    })
+  })
+  .catch((err) => {
+    console.error("Failed to connect to MongoDB", err)
+  })
